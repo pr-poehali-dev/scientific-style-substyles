@@ -224,6 +224,24 @@ export default function Terminology() {
           </div>
         </section>
 
+        {/* Next lecture CTA */}
+        <div className="mt-10 animate-fade-up" style={{ animationDelay: "0.25s", opacity: 0 }}>
+          <div className="border border-border p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <div className="text-xs tracking-widest uppercase text-muted-foreground mb-1">Следующая лекция</div>
+              <div className="font-display text-xl font-light text-foreground">Официально-деловой стиль</div>
+              <div className="text-sm text-muted-foreground mt-1">Подстили, жанры и языковые маркеры деловой речи</div>
+            </div>
+            <button
+              onClick={() => navigate("/official-style")}
+              className="shrink-0 flex items-center gap-2 bg-foreground text-background text-sm px-6 py-3 hover:bg-foreground/85 transition-all group"
+            >
+              Читать лекцию
+              <Icon name="ArrowRight" size={14} className="group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+        </div>
+
       </main>
 
       {/* Footer */}
