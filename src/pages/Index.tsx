@@ -1,330 +1,212 @@
-import { useState } from "react";
 import Icon from "@/components/ui/icon";
 
-const courses = [
+const substyles = [
   {
     id: 1,
-    category: "Физика",
-    title: "Квантовая механика: от основ к реальности",
-    description: "Изучите принципы квантового мира — суперпозиция, запутанность и волновые функции",
-    lectures: 24,
-    duration: "12 недель",
-    level: "Продвинутый",
-    icon: "Atom",
+    name: "Собственно научный",
+    icon: "FlaskConical",
+    audience: "Учёные, исследователи",
+    description:
+      "Используется в научных статьях, монографиях, диссертациях. Отличается максимальной точностью, насыщенностью терминологией и строгой логической структурой. Допускает сложный синтаксис и развёрнутые рассуждения.",
+    examples: ["Научные статьи", "Монографии", "Диссертации", "Тезисы"],
   },
   {
     id: 2,
-    category: "Математика",
-    title: "Высшая математика и анализ",
-    description: "Пределы, производные, интегралы и ряды. Строгое математическое мышление",
-    lectures: 36,
-    duration: "16 недель",
-    level: "Базовый",
-    icon: "Calculator",
+    name: "Научно-учебный",
+    icon: "GraduationCap",
+    audience: "Студенты, школьники",
+    description:
+      "Применяется в учебниках, пособиях, лекциях. Сохраняет точность и системность научного стиля, но упрощает подачу: термины объясняются, приводятся примеры, используется педагогическая риторика.",
+    examples: ["Учебники", "Лекции", "Учебные пособия", "Задачники"],
   },
   {
     id: 3,
-    category: "Биология",
-    title: "Молекулярная биология клетки",
-    description: "ДНК, синтез белков, регуляция генов и современные методы исследования",
-    lectures: 28,
-    duration: "14 недель",
-    level: "Средний",
-    icon: "Dna",
+    name: "Научно-популярный",
+    icon: "BookOpen",
+    audience: "Широкая аудитория",
+    description:
+      "Рассчитан на читателей без специальной подготовки. Сложные понятия передаются через аналогии, образы и сравнения. Допускает элементы публицистического и разговорного стилей для оживления текста.",
+    examples: ["Научпоп-книги", "Журналы", "Подкасты", "Лекции TED"],
   },
   {
     id: 4,
-    category: "Химия",
-    title: "Органическая химия: механизмы реакций",
-    description: "Углубитесь в механизмы органических реакций и синтез сложных молекул",
-    lectures: 32,
-    duration: "15 недель",
-    level: "Продвинутый",
-    icon: "FlaskConical",
+    name: "Научно-деловой",
+    icon: "FileText",
+    audience: "Специалисты, организации",
+    description:
+      "Применяется в технической документации, отчётах, заключениях экспертов. Сочетает признаки научного и официально-делового стилей: точность формулировок и стандартизированность форм.",
+    examples: ["Технические отчёты", "Экспертизы", "Инструкции", "Акты"],
   },
   {
     id: 5,
-    category: "Астрономия",
-    title: "Вселенная: от Большого взрыва до сегодня",
-    description: "История и эволюция Вселенной, звёзды, галактики и тёмная материя",
-    lectures: 20,
-    duration: "10 недель",
-    level: "Базовый",
-    icon: "Telescope",
-  },
-  {
-    id: 6,
-    category: "Информатика",
-    title: "Алгоритмы и структуры данных",
-    description: "Классические алгоритмы, анализ сложности и структуры данных для решения задач",
-    lectures: 40,
-    duration: "18 недель",
-    level: "Средний",
-    icon: "BrainCircuit",
+    name: "Научно-информационный",
+    icon: "Newspaper",
+    audience: "Профессиональное сообщество",
+    description:
+      "Обслуживает сферу научной коммуникации: рефераты, аннотации, патенты, обзоры литературы. Главная задача — максимально сжато и точно передать содержание первоисточника.",
+    examples: ["Рефераты", "Аннотации", "Патенты", "Обзоры"],
   },
 ];
 
-const stats = [
-  { value: "120+", label: "Курсов" },
-  { value: "48 000", label: "Студентов" },
-  { value: "240", label: "Лекторов" },
-  { value: "98%", label: "Довольны" },
+const features = [
+  { icon: "Sigma", label: "Точность", desc: "Каждое слово имеет одно чёткое значение, исключается двусмысленность" },
+  { icon: "Layers", label: "Логичность", desc: "Суждения последовательно вытекают одно из другого" },
+  { icon: "Eye", label: "Объективность", desc: "Устраняется субъективная оценка, факты излагаются нейтрально" },
+  { icon: "AlignLeft", label: "Обобщённость", desc: "Язык передаёт абстрактные понятия и закономерности" },
 ];
-
-const levelColors: Record<string, string> = {
-  "Базовый": "bg-emerald-50 text-emerald-700",
-  "Средний": "bg-amber-50 text-amber-700",
-  "Продвинутый": "bg-rose-50 text-rose-700",
-};
 
 export default function Index() {
-  const [activeCategory, setActiveCategory] = useState("Все");
-  const categories = ["Все", "Физика", "Математика", "Биология", "Химия", "Астрономия", "Информатика"];
-
-  const filtered = activeCategory === "Все"
-    ? courses
-    : courses.filter(c => c.category === activeCategory);
-
   return (
     <div className="min-h-screen bg-background font-body">
 
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <span className="font-display text-2xl font-light tracking-wide text-foreground">
-            Scientia
-          </span>
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#courses" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Курсы</a>
-            <a href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">О платформе</a>
-            <a href="#lectures" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Лекции</a>
+        <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
+          <span className="font-display text-xl font-light tracking-wide text-foreground">Scientia</span>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Icon name="BookOpen" size={13} />
+            <span>Лекция · Русский язык</span>
           </div>
-          <button className="bg-foreground text-background text-sm px-5 py-2 hover:bg-foreground/80 transition-colors">
-            Начать учиться
-          </button>
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="relative max-w-6xl mx-auto px-6 pt-24 pb-20 overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-[0.04] pointer-events-none"
-          style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, hsl(220,20%,12%) 1px, transparent 0)`,
-            backgroundSize: "40px 40px",
-          }}
-        />
+      {/* Article */}
+      <main className="max-w-4xl mx-auto px-6 py-16">
 
-        <div className="relative grid md:grid-cols-2 gap-16 items-center">
-          <div className="animate-fade-up" style={{ animationDelay: "0.1s", opacity: 0 }}>
-            <div className="inline-flex items-center gap-2 text-xs font-body tracking-widest uppercase text-muted-foreground mb-8 border border-border px-3 py-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent inline-block"></span>
-              Образование нового поколения
-            </div>
+        {/* Header */}
+        <div className="mb-16 animate-fade-up" style={{ animationDelay: "0.05s", opacity: 0 }}>
+          <div className="flex items-center gap-3 text-xs text-muted-foreground tracking-widest uppercase mb-6">
+            <span>Стилистика</span>
+            <span className="w-4 h-px bg-border inline-block"></span>
+            <span>Функциональные стили</span>
+          </div>
+          <h1 className="font-display text-5xl md:text-6xl font-light leading-[1.1] tracking-tight text-foreground mb-6">
+            Научный стиль речи
+          </h1>
+          <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
+            Один из функциональных стилей современного русского литературного языка, обслуживающий сферу науки и научного общения.
+          </p>
+          <div className="mt-8 flex items-center gap-6 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1.5"><Icon name="Clock" size={12} />Чтение: ~7 минут</span>
+            <span className="flex items-center gap-1.5"><Icon name="Layers" size={12} />5 подстилей</span>
+          </div>
+        </div>
 
-            <h1 className="font-display text-6xl md:text-7xl font-light leading-[1.05] tracking-tight text-foreground mb-6">
-              Наука<br />
-              <em className="not-italic text-accent">открытая</em><br />
-              для всех
-            </h1>
+        <div className="w-full h-px bg-border mb-16" />
 
-            <p className="text-base text-muted-foreground leading-relaxed mb-10 max-w-sm">
-              Глубокие курсы по точным и естественным наукам. Лекции от ведущих учёных. Системный подход к знаниям.
+        {/* Definition */}
+        <section className="mb-16 animate-fade-up" style={{ animationDelay: "0.15s", opacity: 0 }}>
+          <h2 className="font-display text-3xl font-light text-foreground mb-5">Что такое научный стиль</h2>
+          <div className="space-y-4 text-[15px] text-foreground/80 leading-[1.85]">
+            <p>
+              <strong className="text-foreground font-medium">Научный стиль</strong> — это функциональная разновидность литературного языка, которая исторически сложилась в сфере науки и применяется для передачи, хранения и систематизации знаний о мире.
             </p>
-
-            <div className="flex items-center gap-4">
-              <button
-                className="bg-foreground text-background px-7 py-3.5 text-sm font-body hover:bg-foreground/85 transition-all hover:translate-y-[-1px] active:translate-y-0"
-                onClick={() => document.getElementById("courses")?.scrollIntoView({ behavior: "smooth" })}
-              >
-                Смотреть курсы
-              </button>
-              <button className="text-sm text-foreground flex items-center gap-2 hover:gap-3 transition-all group">
-                Как это работает
-                <Icon name="ArrowRight" size={16} className="group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
+            <p>
+              Главная цель научного стиля — <em>точная и однозначная передача информации</em>. В отличие от художественной литературы, где слово многозначно и образно, научный текст стремится к максимальной ясности: каждый термин должен обозначать строго одно понятие.
+            </p>
+            <p>
+              Становление научного стиля в русском языке связано с реформами Петра I и деятельностью М. В. Ломоносова, который заложил основы отечественной научной терминологии. К XIX–XX векам сложилась развитая система научных жанров и устойчивых речевых формул.
+            </p>
           </div>
 
-          <div className="animate-fade-in" style={{ animationDelay: "0.3s", opacity: 0 }}>
-            <div className="relative">
-              <img
-                src="https://cdn.poehali.dev/projects/ec9e815b-6f1d-47bd-871e-d4b5af6fc92a/files/bf19d330-165f-4a0f-92de-1678f962d93c.jpg"
-                alt="Scientia — образовательная платформа"
-                className="w-full aspect-square object-cover"
-              />
-              <div className="absolute -bottom-4 -left-4 bg-background border border-border p-4 shadow-sm">
-                <div className="text-2xl font-display font-light text-foreground">2 400+</div>
-                <div className="text-xs text-muted-foreground font-body mt-0.5">лекций доступно</div>
+          {/* Pull quote */}
+          <blockquote className="my-10 pl-6 border-l-2 border-accent">
+            <p className="font-display text-xl font-light text-foreground leading-relaxed italic">
+              «Язык науки — это язык точных понятий, а не красивых образов»
+            </p>
+          </blockquote>
+        </section>
+
+        {/* Key features */}
+        <section className="mb-16 animate-fade-up" style={{ animationDelay: "0.2s", opacity: 0 }}>
+          <h2 className="font-display text-3xl font-light text-foreground mb-8">Основные черты</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border">
+            {features.map((f, i) => (
+              <div key={i} className="bg-background p-6 flex gap-4">
+                <div className="w-9 h-9 border border-border flex items-center justify-center shrink-0 mt-0.5">
+                  <Icon name={f.icon} size={15} fallback="Check" />
+                </div>
+                <div>
+                  <div className="font-medium text-foreground mb-1">{f.label}</div>
+                  <div className="text-sm text-muted-foreground leading-relaxed">{f.desc}</div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Stats bar */}
-        <div className="relative grid grid-cols-2 md:grid-cols-4 gap-0 border border-border mt-20 animate-fade-up" style={{ animationDelay: "0.5s", opacity: 0 }}>
-          {stats.map((stat, i) => (
-            <div key={i} className={`px-8 py-6 ${i < stats.length - 1 ? "border-r border-border" : ""}`}>
-              <div className="font-display text-3xl font-light text-foreground">{stat.value}</div>
-              <div className="text-xs text-muted-foreground mt-1 tracking-wide uppercase">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Courses */}
-      <section id="courses" className="max-w-6xl mx-auto px-6 py-20">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-          <div>
-            <div className="text-xs tracking-widest uppercase text-muted-foreground mb-3">Программы</div>
-            <h2 className="font-display text-4xl font-light text-foreground">Курсы</h2>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`text-xs px-4 py-2 border transition-all ${
-                  activeCategory === cat
-                    ? "bg-foreground text-background border-foreground"
-                    : "bg-transparent text-muted-foreground border-border hover:border-foreground hover:text-foreground"
-                }`}
-              >
-                {cat}
-              </button>
             ))}
           </div>
-        </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-border">
-          {filtered.map((course) => (
-            <div
-              key={course.id}
-              className="bg-background p-8 group hover:bg-secondary transition-colors cursor-pointer"
-            >
-              <div className="flex items-start justify-between mb-6">
-                <div className="w-10 h-10 border border-border flex items-center justify-center group-hover:border-foreground transition-colors">
-                  <Icon name={course.icon} size={18} className="text-muted-foreground group-hover:text-foreground transition-colors" fallback="BookOpen" />
-                </div>
-                <span className={`text-xs px-2 py-1 font-body ${levelColors[course.level]}`}>
-                  {course.level}
-                </span>
-              </div>
+          <div className="mt-6 p-6 bg-secondary border border-border text-sm text-foreground/80 leading-relaxed">
+            <strong className="text-foreground">Языковые средства:</strong> широкое использование терминов, отглагольных существительных (<em>исследование, рассмотрение</em>), пассивных конструкций (<em>было установлено, является</em>), вводных слов логической связи (<em>следовательно, таким образом</em>), безличных предложений.
+          </div>
+        </section>
 
-              <div className="text-xs tracking-widest uppercase text-accent mb-2 font-body">{course.category}</div>
-              <h3 className="font-display text-xl font-light text-foreground leading-snug mb-3">
-                {course.title}
-              </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-                {course.description}
-              </p>
+        <div className="w-full h-px bg-border mb-16" />
 
-              <div className="flex items-center justify-between text-xs text-muted-foreground border-t border-border pt-4">
-                <span className="flex items-center gap-1.5">
-                  <Icon name="PlayCircle" size={13} fallback="Play" />
-                  {course.lectures} лекций
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Icon name="Clock" size={13} />
-                  {course.duration}
-                </span>
-                <span className="flex items-center gap-1 text-foreground font-medium group-hover:gap-2 transition-all">
-                  Подробнее
-                  <Icon name="ArrowRight" size={12} />
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+        {/* Substyles */}
+        <section className="mb-16 animate-fade-up" style={{ animationDelay: "0.25s", opacity: 0 }}>
+          <div className="mb-10">
+            <div className="text-xs tracking-widest uppercase text-muted-foreground mb-3">Классификация</div>
+            <h2 className="font-display text-3xl font-light text-foreground">Подстили научного стиля</h2>
+            <p className="mt-3 text-muted-foreground text-sm leading-relaxed max-w-xl">
+              Внутри научного стиля выделяют несколько подстилей — в зависимости от адресата, цели и сферы применения.
+            </p>
+          </div>
 
-      {/* About */}
-      <section id="about" className="border-t border-border">
-        <div className="max-w-6xl mx-auto px-6 py-20">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
-              <div className="text-xs tracking-widest uppercase text-muted-foreground mb-3">О платформе</div>
-              <h2 className="font-display text-4xl font-light text-foreground mb-6">
-                Знания без<br />компромиссов
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                Scientia — это образовательная платформа, где наука преподаётся на академическом уровне. Мы работаем с университетскими профессорами и исследователями, чтобы каждый курс отражал реальное состояние науки.
-              </p>
-              <p className="text-muted-foreground leading-relaxed mb-8">
-                Никаких упрощений ради доступности. Только глубокое погружение, структурированное обучение и сопровождение на каждом этапе.
-              </p>
-              <div className="grid grid-cols-2 gap-6">
-                {[
-                  { icon: "GraduationCap", text: "Академическая программа" },
-                  { icon: "Users", text: "Сообщество учёных" },
-                  { icon: "FileText", text: "Конспекты и материалы" },
-                  { icon: "Award", text: "Сертификаты" },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <div className="w-8 h-8 border border-border flex items-center justify-center shrink-0">
-                      <Icon name={item.icon} size={14} fallback="Check" />
+          <div className="space-y-px">
+            {substyles.map((s, i) => (
+              <div key={s.id} className="group border border-border p-8 hover:bg-secondary transition-colors">
+                <div className="flex items-start gap-6">
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className="font-display text-2xl font-light text-border group-hover:text-accent transition-colors">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div className="w-9 h-9 border border-border flex items-center justify-center group-hover:border-foreground/30 transition-colors">
+                      <Icon name={s.icon} size={15} fallback="BookOpen" />
                     </div>
-                    <span className="text-sm text-foreground">{item.text}</span>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-px">
-              {[
-                { num: "01", title: "Выбери курс", desc: "Более 120 программ по точным и естественным наукам" },
-                { num: "02", title: "Учись в своём темпе", desc: "Видеолекции, конспекты и задачи доступны 24/7" },
-                { num: "03", title: "Задавай вопросы", desc: "Прямые сессии с лекторами и форум сообщества" },
-                { num: "04", title: "Получи сертификат", desc: "Подтверди знания документом установленного образца" },
-              ].map((step, i) => (
-                <div key={i} className="flex gap-6 p-6 border border-border hover:bg-secondary transition-colors group">
-                  <span className="font-display text-3xl font-light text-border group-hover:text-accent transition-colors shrink-0">{step.num}</span>
-                  <div>
-                    <div className="font-body font-medium text-foreground mb-1">{step.title}</div>
-                    <div className="text-sm text-muted-foreground">{step.desc}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 mb-3">
+                      <h3 className="font-display text-xl font-light text-foreground">{s.name}</h3>
+                      <span className="text-xs text-muted-foreground border border-border px-2 py-0.5">{s.audience}</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">{s.description}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {s.examples.map(ex => (
+                        <span key={ex} className="text-xs bg-background border border-border px-3 py-1 text-foreground/70 group-hover:border-foreground/20 transition-colors">
+                          {ex}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CTA */}
-      <section className="bg-foreground text-background">
-        <div className="max-w-6xl mx-auto px-6 py-20 text-center">
-          <div className="text-xs tracking-widest uppercase text-background/50 mb-4 font-body">Начните сегодня</div>
-          <h2 className="font-display text-5xl font-light mb-6">
-            Готовы погрузиться<br />в науку?
-          </h2>
-          <p className="text-background/60 max-w-md mx-auto mb-10 leading-relaxed">
-            Присоединяйтесь к тысячам студентов, которые уже изучают науку серьёзно
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-background text-foreground px-8 py-3.5 text-sm hover:bg-background/90 transition-colors">
-              Записаться бесплатно
-            </button>
-            <button className="border border-background/30 text-background px-8 py-3.5 text-sm hover:border-background/60 transition-colors">
-              Смотреть каталог
-            </button>
+        {/* Summary */}
+        <section className="animate-fade-up" style={{ animationDelay: "0.3s", opacity: 0 }}>
+          <div className="border border-border p-8 bg-foreground text-background">
+            <div className="text-xs tracking-widest uppercase text-background/50 mb-4">Итог</div>
+            <h2 className="font-display text-2xl font-light mb-4">Коротко о главном</h2>
+            <ul className="space-y-3 text-sm text-background/75 leading-relaxed">
+              <li className="flex gap-3"><span className="text-accent mt-1 shrink-0">—</span><span>Научный стиль обслуживает сферу науки и служит передаче точного знания</span></li>
+              <li className="flex gap-3"><span className="text-accent mt-1 shrink-0">—</span><span>Его главные черты: точность, логичность, объективность и обобщённость</span></li>
+              <li className="flex gap-3"><span className="text-accent mt-1 shrink-0">—</span><span>Выделяют 5 подстилей: собственно научный, учебный, популярный, деловой и информационный</span></li>
+              <li className="flex gap-3"><span className="text-accent mt-1 shrink-0">—</span><span>Каждый подстиль ориентирован на свою аудиторию и систему жанров</span></li>
+            </ul>
           </div>
-        </div>
-      </section>
+        </section>
+
+      </main>
 
       {/* Footer */}
-      <footer className="border-t border-border">
-        <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="font-display text-xl font-light text-foreground">Scientia</span>
-          <div className="flex gap-6 text-xs text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors">Курсы</a>
-            <a href="#" className="hover:text-foreground transition-colors">Лекторы</a>
-            <a href="#" className="hover:text-foreground transition-colors">Блог</a>
-            <a href="#" className="hover:text-foreground transition-colors">Контакты</a>
-          </div>
-          <span className="text-xs text-muted-foreground">© 2026 Scientia</span>
+      <footer className="border-t border-border mt-16">
+        <div className="max-w-4xl mx-auto px-6 py-6 flex items-center justify-between">
+          <span className="font-display text-lg font-light text-foreground">Scientia</span>
+          <span className="text-xs text-muted-foreground">© 2026</span>
         </div>
       </footer>
+
     </div>
   );
 }
