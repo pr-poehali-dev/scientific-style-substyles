@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 
 const substyles = [
@@ -56,6 +57,7 @@ const features = [
 ];
 
 export default function Index() {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-background font-body">
 
@@ -196,6 +198,24 @@ export default function Index() {
             </ul>
           </div>
         </section>
+
+        {/* Next lecture CTA */}
+        <div className="mt-10 animate-fade-up" style={{ animationDelay: "0.35s", opacity: 0 }}>
+          <div className="border border-border p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <div className="text-xs tracking-widest uppercase text-muted-foreground mb-1">Следующая лекция</div>
+              <div className="font-display text-xl font-light text-foreground">Научная речь и терминология</div>
+              <div className="text-sm text-muted-foreground mt-1">Виды терминов: общенаучные, частнонаучные, технологические</div>
+            </div>
+            <button
+              onClick={() => navigate("/terminology")}
+              className="shrink-0 flex items-center gap-2 bg-foreground text-background text-sm px-6 py-3 hover:bg-foreground/85 transition-all group"
+            >
+              Читать лекцию
+              <Icon name="ArrowRight" size={14} className="group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+        </div>
 
       </main>
 
